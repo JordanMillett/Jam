@@ -1,0 +1,25 @@
+@inherits LayoutComponentBase
+@using Jam.Shared
+
+<main>
+    <Navbar />
+    
+    <article class="content">
+        @Body
+    </article>
+</main>
+
+<style>
+    main::-webkit-scrollbar 
+    {
+        display: none;
+    } 
+    
+    .content
+    {
+        background-color: var(--jam-background);
+        border-radius: 25px;
+        padding: 1.5rem !important;
+        min-height: calc(100% + 3.5rem);
+    }
+</style>

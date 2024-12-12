@@ -1,0 +1,57 @@
+:root
+{
+    --jam-background: #0f0e17;
+    --jam-header: #fffffe;
+    --jam-text: #a7a9be;
+    --jam-border: #000000;
+    
+    --jam-primary: #f92a1f;
+    --jam-secondary: #f5648b;
+    --jam-tertiary: #59ff4d;
+}
+
+html, body
+{
+    font-family: "Inter", "Comic Sans MS";
+    background-color: var(--jam-background);
+}
+
+.btn, .btn:hover, .btn:active, .btn:focus, .btn:disabled
+{
+    font-family: "Dangrek", "Comic Sans MS";
+    color: var(--jam-header);
+    font-size: 1.25rem;
+    background-color: var(--jam-primary);
+    
+    border-style: solid;
+    border-radius: 0.50rem;
+    border-width: 0.15rem;
+    border-color: var(--jam-border);
+    
+    transition: none;
+}
+
+a
+{
+    color: var(--jam-primary);
+    text-decoration: none;
+}
+
+p
+{
+    font-size: 1.00rem;
+    color: var(--jam-text);
+}
+
+h1, h2, h3, h4, h5, h6 
+{
+    font-family: "Dangrek", "Comic Sans MS";
+    color: var(--jam-header);
+}
+
+h1 { font-size: 3.50rem; }
+h2 { font-size: 3.00rem; }
+h3 { font-size: 2.50rem; }
+h4 { font-size: 2.00rem; }
+h5 { font-size: 1.50rem; }
+h6 { font-size: 1.00rem; }

@@ -1,6 +1,8 @@
 @page "/play"
 @using Jam.Shared
 @using Jelly
+@inject HttpClient Http
+@inject ConfigService Config
 
 <PageTitle>Jam. - Play</PageTitle>
 
@@ -22,16 +24,19 @@
 
 @code
 {
+    public AlbumEntity Selected = null!;
     public SongEntity Song = null!;
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(2000);
+        try
+        {
+            Selected = await Http.GetFromJsonAsync<AlbumEntity>($"{Config.ApiUrl}/api/getalbum/{1}");
 
-        Song = new SongEntity();
-        Song.SongName = "Name";
-        Song.AlbumName = "Album";
-        Song.ArtistName = "Artist";
-        Song.CoverURL = "https://picsum.photos/500";
+            Song = await Http.GetFromJsonAsync<SongEntity>($"{Config.ApiUrl}/api/getsong/{Selected.SongIDs[0]}");
+        }catch
+        {
+            Console.WriteLine("NO worky");
+        }
     }
 }

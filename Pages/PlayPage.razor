@@ -1,23 +1,37 @@
 @page "/play"
+@using Jam.Shared
+@using Jelly
 
 <PageTitle>Jam. - Play</PageTitle>
 
 <div class="container">
-    <div class="cover">
-        
+
+    <div class="row">
+
+        <div class="col-4"></div>
+
+        <div class="col-4">
+
+            <Player Song=@Song />
+
+        </div>
+
+        <div class="col-4"></div>
     </div>
 </div>
 
-<style>
-    .cover
+@code
+{
+    public SongEntity Song = null!;
+
+    protected override async Task OnInitializedAsync()
     {
-        width: 400px;
-        height: 400px;
-        background-color: red;
+        await Task.Delay(2000);
+
+        Song = new SongEntity();
+        Song.SongName = "Name";
+        Song.AlbumName = "Album";
+        Song.ArtistName = "Artist";
+        Song.CoverURL = "https://picsum.photos/500";
     }
-    
-    .container
-    {
-        background-color: blue;
-    }
-</style>
+}

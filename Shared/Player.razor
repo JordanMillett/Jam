@@ -1,0 +1,77 @@
+@using Jelly
+
+@if(Song != null)
+{
+    <div class="cover-container mt-4 mb-2">
+        <Image Class="cover" Src="@Song.CoverURL"/>
+    </div>
+    
+    <h4 class="text-center"><a href="browse/album/@Song.AlbumID">@Song.SongName</a></h4>
+    <h5 class="text-center"><a href="broswe/artist/@Song.ArtistID">@Song.ArtistName</a></h5>
+}else
+{
+    <div class="cover-container mt-4 mb-2">
+        <Image Class="cover"/>
+    </div>
+    
+    <h4 class="text-center">Loading...</h4>
+    <h5 class="text-center">Loading...</h5>
+}
+
+<Progress Class="mt-3">
+    <ProgressBar />
+</Progress>
+
+<div class="buttons mt-3">
+    <div class="row">
+        <div class="col-3"><Button><Icon Name="IconName.SkipBackward"/></Button></div>
+        <div class="col-3"><Button><Icon Name="IconName.Play"/></Button></div>
+        <div class="col-3"><Button><Icon Name="IconName.SkipForward"/></Button></div>
+        <div class="col-3"><Button><Icon Name="IconName.PlusCircle"/></Button></div>
+    </div>
+</div>
+
+<style>   
+    a
+    {
+    color: var(--jam-header);
+    }
+
+    .cover-container 
+    {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    overflow: hidden;
+    border-radius: 25px;
+    background-color: var(--jam-background);
+    }
+
+    .cover-container .cover
+    {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    
+    background-image: url("imgs/500.jpg");
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: var(--jam-background);
+    }
+
+    .buttons .btn
+    {
+    width: 100%;
+    }
+</style>
+
+@code
+{
+    [Parameter]
+    public SongEntity? Song { get; set; }
+}

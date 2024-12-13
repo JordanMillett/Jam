@@ -1,0 +1,12 @@
+@page "/browse/album/{Target}"
+@using Jam.Shared
+
+<PageTitle>Jam. - Album</PageTitle>
+
+<h2>@Target</h2>
+
+@code 
+{
+    [Parameter]
+    public required string Target { get; set; }
+}

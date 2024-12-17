@@ -1,12 +1,13 @@
 @using Jelly
 @inject ConfigService Config
+@inject AudioService Audio
 
 @if(Song != null)
 {
     <div class="cover-container mt-4 mb-2">
         <Image Class="cover" Src="@Config.FullImageURL(Song.CoverFileName!)"/>
     </div>
-    
+
     <h4 class="text-center"><a href="browse/album/@Song.AlbumID">@Song.SongName</a></h4>
     <h5 class="text-center"><a href="broswe/artist/@Song.ArtistID">@Song.ArtistName</a></h5>
 }else
@@ -14,7 +15,7 @@
     <div class="cover-container mt-4 mb-2">
         <Image Class="cover"/>
     </div>
-    
+
     <h4 class="text-center">Loading...</h4>
     <h5 class="text-center">Loading...</h5>
 }
@@ -25,12 +26,14 @@
 
 <div class="buttons mt-3">
     <div class="row">
-        <div class="col-3"><Button><Icon Name="IconName.SkipBackward"/></Button></div>
-        <div class="col-3"><Button><Icon Name="IconName.Play"/></Button></div>
-        <div class="col-3"><Button><Icon Name="IconName.SkipForward"/></Button></div>
-        <div class="col-3"><Button><Icon Name="IconName.PlusCircle"/></Button></div>
+        <div class="col-3"><Button @onclick="OnBack"><Icon Name="IconName.SkipBackward"/></Button></div>
+        <div class="col-3"><Button @onclick="OnAction"><Icon Name="@(Audio.Paused ? IconName.Play : IconName.Pause)"/></Button></div>
+        <div class="col-3"><Button @onclick="OnForward"><Icon Name="IconName.SkipForward"/></Button></div>
+        <div class="col-3"><Button @onclick="OnSpecial"><Icon Name="IconName.PlusCircle"/></Button></div>
     </div>
 </div>
+
+@Audio.ByteOffset
 
 <style>   
     a
@@ -57,7 +60,7 @@
     height: 100%;
     object-fit: cover;
     display: block;
-    
+
     background-image: url("imgs/500.jpg");
     background-size: cover; 
     background-position: center;
@@ -75,4 +78,16 @@
 {
     [Parameter]
     public SongEntity? Song { get; set; }
+    
+    [Parameter]
+    public EventCallback OnForward { get; set; }
+    
+    [Parameter]
+    public EventCallback OnBack { get; set; }
+    
+    [Parameter]
+    public EventCallback OnAction { get; set; }
+    
+    [Parameter]
+    public EventCallback OnSpecial { get; set; }
 }

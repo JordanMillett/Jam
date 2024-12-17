@@ -16,6 +16,13 @@ html, body
     background-color: var(--jam-background);
 }
 
+.autoscroll
+{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .btn, .btn:hover, .btn:active, .btn:focus, .btn:disabled
 {
     font-family: "Dangrek", "Comic Sans MS";

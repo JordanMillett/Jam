@@ -1,8 +1,7 @@
 @page "/play"
 @using Jam.Shared
 @using Jelly
-@inject HttpClient Http
-@inject ConfigService Config
+@inject AudioService Audio
 
 <PageTitle>Jam. - Play</PageTitle>
 
@@ -10,33 +9,35 @@
 
     <div class="row">
 
-        <div class="col-4"></div>
+        <div class="col-4 text-center">
+            <br>
+            <h2>Last Played</h2>
+            <br>
+            @foreach(var pair in Audio.History)
+            {
+                <h5 class="autoscroll">@pair.SongName</h5>
+            }
+        </div>
 
         <div class="col-4">
 
-            <Player Song=@Song />
+            <Player 
+            Song=@Audio.Current 
+            OnBack="() => Audio.LastSong()"
+            OnForward="() => Audio.NextSong()"
+            OnAction="() => Audio.ToggleAction()"
+            />
 
         </div>
 
-        <div class="col-4"></div>
+        <div class="col-4 text-center">
+            <br>
+            <h2>Up Next!</h2>
+            <br>
+            @foreach(var pair in Audio.Upcoming)
+            {
+                <h5 class="autoscroll">@pair.SongName</h5>
+            }
+        </div>
     </div>
 </div>
-
-@code
-{
-    public AlbumEntity Selected = null!;
-    public SongEntity Song = null!;
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            Selected = await Http.GetFromJsonAsync<AlbumEntity>($"{Config.ApiUrl}/api/getalbum/{1}");
-
-            Song = await Http.GetFromJsonAsync<SongEntity>($"{Config.ApiUrl}/api/getsong/{Selected.SongIDs[0]}");
-        }catch
-        {
-            Console.WriteLine("NO worky");
-        }
-    }
-}

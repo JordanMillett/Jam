@@ -13,8 +13,13 @@ builder.Services.AddSingleton(Http);
 ConfigService Config = JsonSerializer.Deserialize<ConfigService>(await Http.GetStringAsync("config.json"))!;
 builder.Services.AddSingleton(Config);
 
+builder.Services.AddSingleton<AudioService>();
+
 builder.Services.AddBlazorBootstrap();
 
 var host = builder.Build();
+
+AudioService Audio = host.Services.GetRequiredService<AudioService>();
+await Audio.InitializeAsync();
 
 await host.RunAsync();

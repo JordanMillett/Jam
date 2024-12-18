@@ -22,7 +22,7 @@
         <div class="col-4">
 
             <Player 
-            Song=@Audio.Current 
+            Song=@Audio.ActiveSong 
             OnBack="() => Audio.LastSong()"
             OnForward="() => Audio.NextSong()"
             OnAction="() => Audio.ToggleAction()"

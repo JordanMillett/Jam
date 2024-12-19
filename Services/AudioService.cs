@@ -15,7 +15,7 @@ public class AudioService
     HttpClient Http = null!;
     IJSRuntime Runtime = null!;
 
-    public bool IsPaused = true;
+    public bool IsPlaying = false;
     public bool IsDownloading = false;
     
     private AudioContext AudioEnvironment  = null!;
@@ -28,7 +28,7 @@ public class AudioService
     public long DownloadedBytes = 0;
     public long FileSize = 0;
     
-    const long ChunkSize = 256000;
+    const long ChunkSize = 48000; //256000
     const int BitrateKbps = 64;
     const int BytesPerSecond = (BitrateKbps * 1000) / 8;
     
@@ -52,7 +52,135 @@ public class AudioService
 
         await NextSong();
     }
+    
+    public async Task ToggleAction()
+    {
+        if (AudioEnvironment == null)
+            AudioEnvironment = await AudioContext.CreateAsync(Runtime);
 
+        await UpdatePaused();
+
+        if(AudioSource == null)
+        {
+            _ = StartPlayback();
+        }else
+        {
+            if (IsPlaying)
+                _ = PausePlayback();
+            else
+                _ = ResumePlayback();
+        }
+    }
+
+    async Task OnSongChange()
+    {
+        await EndPlayback();
+
+        _ = StartDownload();
+        
+        await UpdatePaused();
+        
+        if (IsPlaying) //User was playing music before
+            _ = StartPlayback();
+            
+        OnStateChanged?.Invoke();
+    }
+    
+    async Task EndPlayback()
+    {
+        DownloadTasks.Cancel();
+        DownloadTasks = new CancellationTokenSource();
+        DownloadedData.Clear();
+        DownloadedBytes = 0;
+        
+        PlaybackTasks.Cancel();
+        PlaybackTasks = new CancellationTokenSource();
+        if (AudioSource != null)
+            await AudioSource.DisconnectAsync();
+        AudioSource = null!;
+        
+        OnStateChanged?.Invoke();
+    }
+
+    async Task StartPlayback()
+    {
+        AudioSource = null!;
+        AudioBufferSourceNode One = null!;
+        AudioBufferSourceNode Two = null!;
+        bool BackgroundLoadOne = false;
+    
+        while (DownloadedData.Count < 2 && !PlaybackTasks.Token.IsCancellationRequested)
+            await Task.Delay(100);
+        
+        //PREP FIRST NODE
+        DownloadedData.TryDequeue(out var data1);
+        AudioBuffer buffer = await AudioEnvironment.DecodeAudioDataAsync(data1);
+        One = await AudioEnvironment.CreateBufferSourceAsync();
+        await One.SetBufferAsync(buffer);
+        await One.ConnectAsync(await AudioEnvironment.GetDestinationAsync());
+        await One.StartAsync();
+        AudioSource = One;
+        //WAIT FOR FIRST NODE
+        double durationInSeconds = (double)data1.Length / BytesPerSecond;
+        await Task.Delay(TimeSpan.FromSeconds(durationInSeconds));
+    
+        while (!PlaybackTasks.Token.IsCancellationRequested)
+        {   
+            if (DownloadedData.TryPeek(out var chunk))
+            {
+                Console.WriteLine("SWAPPING NODE");
+                
+                if(BackgroundLoadOne)
+                {
+                    //_ = PrepNode(chunk).ContinueWith(task => One = task.Result);
+                    PrepNode(chunk, One);
+                    AudioSource = Two; 
+                }else
+                {
+                    PrepNode(chunk, Two);
+                    AudioSource = One;
+                }
+                BackgroundLoadOne = !BackgroundLoadOne;
+
+                durationInSeconds = (double)chunk.Length / BytesPerSecond;
+                await Task.Delay(TimeSpan.FromSeconds(durationInSeconds));
+                DownloadedData.TryDequeue(out _);
+            }
+            else
+            {
+                // Buffer underflow, wait for more chunks
+                Console.WriteLine("WAITING");
+                await Task.Delay(100);
+            }
+            
+            while (!IsPlaying)
+            {
+                Console.WriteLine("STOPPED");
+                await Task.Delay(100);
+            }
+        }
+
+        _ = EndPlayback();
+    }
+    
+    void PrepNode(byte[] chunk, AudioBufferSourceNode Node)
+    {
+        double durationInSeconds = (double)chunk.Length / BytesPerSecond;
+        
+         _ = AudioEnvironment.DecodeAudioDataAsync(chunk).ContinueWith(async task =>
+        {
+            if (task.IsCompletedSuccessfully)
+            {
+                AudioBuffer Buffer = task.Result;
+                Node = await AudioEnvironment.CreateBufferSourceAsync();
+                _ = Node.SetBufferAsync(Buffer);
+                _ = Node.ConnectAsync(await AudioEnvironment.GetDestinationAsync());
+                _ = Node.StartAsync(durationInSeconds);
+            }
+        });
+    }
+    
+    //GUI STUFF
     public async Task NextSong()
     {
         if (Upcoming.Count == 0)
@@ -64,7 +192,7 @@ public class AudioService
         ActiveSong = await Http.GetFromJsonAsync<SongEntity>($"{Config.ApiUrl}/api/getsong/{Upcoming[0].SongID}");
         Upcoming.RemoveAt(0);
         
-        await OnSongChange();
+        _ = OnSongChange();
     }
     
     public async Task LastSong()
@@ -78,101 +206,45 @@ public class AudioService
         ActiveSong = await Http.GetFromJsonAsync<SongEntity>($"{Config.ApiUrl}/api/getsong/{History[0].SongID}");
         History.RemoveAt(0);
 
-        await OnSongChange();
-    }
-    
-    public async Task ToggleAction()
-    {
-        if (AudioEnvironment == null)
-            AudioEnvironment = await AudioContext.CreateAsync(Runtime);
-
-        if(AudioSource == null)
-        {
-            await StartPlayback();
-        }else
-        {
-            if (IsPaused)
-                await ResumePlayback();
-            else
-                await PausePlayback();
-        }
-    }
-
-    async Task OnSongChange()
-    {
-        await EndPlayback();
-
-        _ = StartDownload();
-        
-        OnStateChanged?.Invoke();
-        
-        if (AudioSource != null && !IsPaused) //User was playing music before
-            await StartPlayback();
-    }
-    
-    async Task PausePlayback()
-    {
-        IsPaused = true;
-        await AudioSource.StopAsync();
-    }
-    
-    async Task EndPlayback()
-    {
-        DownloadTasks.Cancel();
-        DownloadTasks = new CancellationTokenSource();
-        DownloadedData.Clear();
-        DownloadedBytes = 0;
-        
-        if (AudioSource != null)
-        {
-            PlaybackTasks.Cancel();
-            PlaybackTasks = new CancellationTokenSource();
-            await AudioSource.DisconnectAsync();
-            AudioSource = null!;
-        }
-        
-        OnStateChanged?.Invoke();
+        _ = OnSongChange();
     }
     
     async Task ResumePlayback()
     {
-        await AudioSource.StartAsync();
-        IsPaused = false;
+        await AudioEnvironment.ResumeAsync();
+        await UpdatePaused();
+        OnStateChanged?.Invoke();
     }
-
-    async Task StartPlayback()
-    {   
-        AudioSource = await AudioEnvironment.CreateBufferSourceAsync();
-        IsPaused = false; 
-        
-        // Wait for some pre-buffering
-        while (DownloadedData.Count < 1 && !PlaybackTasks.Token.IsCancellationRequested)
-            await Task.Delay(100);
     
-        // Play chunks from buffer
-        while (!PlaybackTasks.Token.IsCancellationRequested)
+    async Task PausePlayback()
+    {
+        await AudioEnvironment.SuspendAsync();
+        await UpdatePaused();
+        OnStateChanged?.Invoke();
+    }
+    
+    public async Task<bool> UpdatePaused()
+    {
+        if (AudioEnvironment == null)
         {
-            if (DownloadedData.TryDequeue(out var chunk))
+            IsPlaying = false;
+            return true;
+        }
+        else
+        {
+            if (await AudioEnvironment.GetStateAsync() == AudioContextState.Running)
             {
-                // Decode and play the chunk
-                AudioBuffer downloaded = await AudioEnvironment.DecodeAudioDataAsync(chunk);
-                await AudioSource.SetBufferAsync(downloaded);
-                await AudioSource.ConnectAsync(await AudioEnvironment.GetDestinationAsync());
-                await AudioSource.StartAsync();
-
-                double durationInSeconds = (double)chunk.Length / BytesPerSecond;
-                await Task.Delay(TimeSpan.FromSeconds(durationInSeconds));
-            }
-            else
+                IsPlaying = true;
+                return false;
+            }else
             {
-                // Buffer underflow, wait for more chunks
-                await Task.Delay(100);
+                IsPlaying = false;
+                return true;
             }
         }
-
-        await EndPlayback();
     }
     
+    //DOWNLOADING
     async Task StartDownload()
     {
         if (ActiveSong == null || IsDownloading) return;
@@ -193,7 +265,7 @@ public class AudioService
             DownloadedData.Enqueue(chunk);
             DownloadedBytes += chunk.Length;
 
-            Console.WriteLine(DownloadedBytes + " / " + FileSize);
+            //Console.WriteLine(DownloadedBytes + " / " + FileSize);
 
             // Small delay between downloads
             OnStateChanged?.Invoke();

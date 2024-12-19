@@ -31,14 +31,14 @@
 <div class="buttons mt-3">
     <div class="row">
         <div class="col-3"><Button @onclick="OnBack"><Icon Name="IconName.SkipBackward"/></Button></div>
-        <div class="col-3"><Button @onclick="OnAction"><Icon Name="@(Audio.IsPaused ? IconName.Play : IconName.Pause)"/></Button></div>
+        <div class="col-3"><Button @onclick="OnAction"><Icon Name="@(Audio.IsPlaying ? IconName.Pause : IconName.Play)"/></Button></div>
         <div class="col-3"><Button @onclick="OnForward"><Icon Name="IconName.SkipForward"/></Button></div>
         <div class="col-3"><Button @onclick="OnSpecial"><Icon Name="IconName.PlusCircle"/></Button></div>
     </div>
 </div>
 
 <br>
-<p>Paused : @Audio.IsPaused</p>
+<p>Playing : @Audio.IsPlaying</p>
 <p>Streaming : @(Audio.AudioSource != null)</p>
 <p>Downloading : @Audio.IsDownloading</p>
 

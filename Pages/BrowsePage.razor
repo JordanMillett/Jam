@@ -1,4 +1,34 @@
 @page "/browse"
 @using Jam.Shared
+@inject MusicService Music
+@inject HttpClient Http
+@inject ConfigService Config
+@using Jelly
 
 <PageTitle>Jam. - Browse</PageTitle>
+
+@foreach (ArtistEntity A in Artists)
+{
+    <ArtistInfo Info="@A" />
+    <hr>
+    <br><br>
+}
+
+@code 
+{
+    List<ArtistEntity> Artists = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Artists = new List<ArtistEntity>();
+        for (int i = 0; i < Music.Sequence.Artists; i++)
+        {
+            int ID = i + 1;
+            var artist = await Http.GetFromJsonAsync<ArtistEntity>($"{Config.ApiUrl}/api/get/artist/{ID}");
+            if (artist != null)
+            {
+                Artists.Add(artist);
+            }
+        }
+    }
+}

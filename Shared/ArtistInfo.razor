@@ -1,0 +1,36 @@
+@using Jelly
+@inject ConfigService Config
+
+<div class="row">
+    <div class="col-12 col-sm-5 col-md-4 col-lg-3">
+        <div class="cover-container m-2"><a href="browse/artist/@Info.ArtistID">
+            <Image Class="cover pfp" Src="@Config.FullImageURL(Info.PictureFileName!)"/>
+        </a></div>
+    </div>
+    <div class="col-12 col-sm-7 col-md-8 col-lg-9">
+        <a href="browse/artist/@Info.ArtistID"><h1>@Info.ArtistName</h1></a>
+    </div>
+</div>
+
+<div class="row">
+    @for(int i = 0; i < Info.AlbumNames.Count; i++)
+    {
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-4 text-center">
+            @{
+            int index = i;
+
+            <div class="cover-container m-2"><a href="browse/album/@Info.AlbumIDs[index]">
+                <Image Class="cover" Src="@Config.FullImageURL(Info.AlbumPictureFileNames[index])"/>
+            </a></div>
+            
+            <a href="browse/album/@Info.AlbumIDs[index]"><h4>@Info.AlbumNames[index]</h4></a>
+            }
+        </div>
+    }
+</div>
+
+@code
+{
+    [Parameter]
+    public ArtistEntity Info { get; set; } = null!;
+}

@@ -10,7 +10,7 @@
 @if(Album != null)
 {
     <a href="browse/album/@Album.AlbumID">
-        <Image Class="cover" Src="@Config.FullImageURL(Album.CoverFileName!)"/>
+        <Image Class="cover" Src="@Config.FullImageURL(Album.PictureFileName!)"/>
     </a>
     
     <a href="browse/artist/@Album.ArtistID"><h1>@Album.ArtistName</h1></a>

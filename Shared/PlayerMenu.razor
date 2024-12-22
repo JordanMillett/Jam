@@ -1,6 +1,6 @@
 @using Jelly
 @inject ConfigService Config
-@inject AudioService Audio
+@inject MusicService Music
 
 @if(Song != null)
 {
@@ -25,22 +25,22 @@
 </Progress>
 
 <Progress Class="mb-3" Height="3">
-    <ProgressBar Width="@(((double) Audio.DownloadedBytes / (double) Audio.FileSize) * 100)" style="background-color: grey; transition:none;"/>
+    <ProgressBar Width="@(((double) Music.Downloader.DownloadedBytes / (double) Music.Downloader.FileSize) * 100)" style="background-color: grey; transition:none;"/>
 </Progress>
 
 <div class="buttons mt-3">
     <div class="row">
         <div class="col-3"><Button @onclick="OnBack"><Icon Name="IconName.SkipBackward"/></Button></div>
-        <div class="col-3"><Button @onclick="OnAction"><Icon Name="@(Audio.IsPlaying ? IconName.Pause : IconName.Play)"/></Button></div>
+        <div class="col-3"><Button @onclick="OnAction"><Icon Name="@(Music.Streamer.IsPaused ? IconName.Pause : IconName.Play)"/></Button></div>
         <div class="col-3"><Button @onclick="OnForward"><Icon Name="IconName.SkipForward"/></Button></div>
         <div class="col-3"><Button @onclick="OnSpecial"><Icon Name="IconName.PlusCircle"/></Button></div>
     </div>
 </div>
 
 <br>
-<p>Playing : @Audio.IsPlaying</p>
-<p>Streaming : @(Audio.AudioSource != null)</p>
-<p>Downloading : @Audio.IsDownloading</p>
+<p>Playing : @Music.Streamer.IsStreaming</p>
+<p>Streaming : @Music.Streamer.IsPaused</p>
+<p>Downloading : @Music.Downloader.IsDownloading</p>
 
 <style>   
     a
@@ -100,7 +100,7 @@
 
     protected override void OnInitialized()
     {
-        Audio.OnStateChanged += Refresh;
+        Music.OnStateChanged += Refresh;
         base.OnInitialized();
     }
 
@@ -111,6 +111,6 @@
 
     void Dispose()
     {
-        Audio.OnStateChanged -= Refresh;
+        Music.OnStateChanged -= Refresh;
     }
 }

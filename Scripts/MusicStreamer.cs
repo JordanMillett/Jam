@@ -41,7 +41,6 @@ public class MusicStreamer
         double nextStartTime = await AudioEnvironment.GetCurrentTimeAsync();
         double bitrate = 0;
         double songDuration = 0;
-        double passed = 0;
         while (!Token.IsCancellationRequested)
         {   
             IsPaused = await AudioEnvironment.GetStateAsync() != AudioContextState.Running;
@@ -59,11 +58,12 @@ public class MusicStreamer
                 await source.StartAsync(nextStartTime);
                 double duration = await buffer.GetDurationAsync();
                 nextStartTime += duration;
+                songDuration += duration;
                 
                 if(bitrate == 0)
                 {
-                    bitrate = (chunk.Length * 8) / duration;
-                    songDuration = (Downloader.FileSize * 8) / bitrate;
+                    //bitrate = (chunk.Length * 8) / duration;
+                    //songDuration = (Downloader.FileSize * 8) / bitrate;
                     //Console.WriteLine(songDuration);
                 }
                 

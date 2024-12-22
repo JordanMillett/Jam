@@ -33,7 +33,7 @@ public class MusicDownloader
         //Console.WriteLine("Music Downloader Started");
         
         IsDownloading = true;
-        FileSize = await Http.GetFromJsonAsync<long>($"{Config.ApiUrl}/api/getsize/{ActiveSong.MP3FileName}");
+        FileSize = await Http.GetFromJsonAsync<long>($"{Config.ApiUrl}/api/get/size/{ActiveSong.MP3FileName}");
         for (long i = 0; i < FileSize; i += MusicService.ChunkSize)
         {
             if (Token.IsCancellationRequested)
@@ -61,7 +61,7 @@ public class MusicDownloader
 
     async Task<byte[]> FetchAudioChunk(SongEntity ActiveSong, long Start, long End, CancellationToken Token)
     {
-        string query = $"{Config.ApiUrl}/api/getaudiochunk/?URL={ActiveSong.MP3FileName}&Start={Start}&End={End}";
+        string query = $"{Config.ApiUrl}/api/get/audio/?URL={ActiveSong.MP3FileName}&Start={Start}&End={End}";
         long expectedSize = End - Start + 1;
         
         byte[] chunk = await Http.GetByteArrayAsync(query, Token);

@@ -1,12 +1,49 @@
 @page "/browse/album/{Target}"
 @using Jam.Shared
+@using Jelly
+@inject HttpClient Http
+@inject ConfigService Config
+@inject MusicService Music
 
 <PageTitle>Jam. - Album</PageTitle>
 
-<h2>@Target</h2>
+@if(Album != null)
+{
+    <a href="browse/album/@Album.AlbumID">
+        <Image Class="cover" Src="@Config.FullImageURL(Album.CoverFileName!)"/>
+    </a>
+    
+    <a href="browse/artist/@Album.ArtistID"><h1>@Album.ArtistName</h1></a>
+    
+    <a href="browse/album/@Album.AlbumID"><h4>@Album.AlbumName</h4></a>
+    
+    <ol>
+    @for(int i = 0; i < Album.SongNames.Count; i++)
+    {
+        int index = i;
+        
+        <h5 style="cursor:pointer;"><li @onclick="() => Music.PlayInstantly((Album.SongIDs[index], Album.SongNames[index]))">@Album.SongNames[index]</li></h5>
+    }
+    </ol>
+}
+
+<style>
+    .cover
+    {
+        max-width: 250px;
+        max-height: 250px;
+    }
+</style>
 
 @code 
 {
     [Parameter]
     public required string Target { get; set; }
+
+    AlbumEntity Album = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Album = await Http.GetFromJsonAsync<AlbumEntity>($"{Config.ApiUrl}/api/get/album/{int.Parse(Target)}") ?? null!;
+    }
 }

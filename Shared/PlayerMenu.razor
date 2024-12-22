@@ -5,11 +5,13 @@
 @if(Song != null)
 {
     <div class="cover-container mt-4 mb-2">
-        <Image Class="cover" Src="@Config.FullImageURL(Song.CoverFileName!)"/>
+        <a href="browse/album/@Song.AlbumID">
+            <Image Class="cover" Src="@Config.FullImageURL(Song.CoverFileName!)"/>
+        </a>
     </div>
 
     <h4 class="text-center"><a href="browse/album/@Song.AlbumID">@Song.SongName</a></h4>
-    <h5 class="text-center"><a href="broswe/artist/@Song.ArtistID">@Song.ArtistName</a></h5>
+    <h5 class="text-center"><a href="browse/artist/@Song.ArtistID">@Song.ArtistName</a></h5>
 }else
 {
     <div class="cover-container mt-4 mb-2">

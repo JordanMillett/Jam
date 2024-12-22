@@ -10,6 +10,7 @@
   
     <Compile Include="..\Jelly\Entities.cs" Link="Entities.cs" />
     <Compile Include="..\Jelly\Requests.cs" Link="Requests.cs" />
+  <Compile Include="..\Jelly\Responses.cs" Link="Responses.cs" />
 
   </ItemGroup>
 

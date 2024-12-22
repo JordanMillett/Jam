@@ -4,6 +4,6 @@ public class ConfigService
     
     public string FullImageURL(string FileName)
     {
-        return ApiUrl + "/api/getimage/" + FileName;
+        return ApiUrl + "/api/get/image/" + FileName;
     }
 }

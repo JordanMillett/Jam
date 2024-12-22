@@ -5,11 +5,10 @@ using KristofferStrube.Blazor.WebAudio;
 
 public class MusicService
 {
-    public const long ChunkSize = 48000; //256000
-    public const int BitrateKbps = 64;
-    public const int BytesPerSecond = (BitrateKbps * 1000) / 8;
+    public const long ChunkSize = 128000; //256000
     
-    public event Action? OnStateChanged = null!;
+    public event Action? RefreshHook = null!;
+    event Action? OnStateChanged = null!;
 
     public SongEntity ActiveSong = null!;
     
@@ -21,11 +20,12 @@ public class MusicService
     AudioContext AudioEnvironment  = null!;
     
     public MusicDownloader Downloader = null!;
-    public MusicLoader Loader = null!;
     public MusicStreamer Streamer = null!;
     
     public List<(int SongID, string SongName)> Upcoming = new List<(int SongID, string SongName)>();
     public List<(int SongID, string SongName)> History = new List<(int SongID, string SongName)>();
+
+    public bool InteractionPaused = false;
 
     public MusicService(ConfigService config, HttpClient http, IJSRuntime runtime)
     {
@@ -36,20 +36,37 @@ public class MusicService
     
     public async Task InitializeAsync()
     {
+        OnStateChanged += RefreshAll;
+        
         Downloader = new MusicDownloader(OnStateChanged!, Config, Http);
-        Loader = new MusicLoader(Downloader);
-        Streamer = new MusicStreamer(Loader);
+        Streamer = new MusicStreamer(OnStateChanged!, Downloader);
         
         //Fill queue with first album
         AlbumEntity Selected = await Http.GetFromJsonAsync<AlbumEntity>($"{Config.ApiUrl}/api/getalbum/{1}") ?? null!;
         for (int i = 0; i < Selected!.SongIDs!.Count; i++)
             Upcoming.Add((Selected.SongIDs[i], Selected.SongNames![i]));
 
-        await NextSong();
+        //Set as first song
+        ActiveSong = await Http.GetFromJsonAsync<SongEntity>($"{Config.ApiUrl}/api/getsong/{Upcoming[0].SongID}") ?? null!;
+        Upcoming.RemoveAt(0);
+    }
+    
+    void RefreshAll()
+    {
+        RefreshHook?.Invoke();
+    }
+    
+    void Dispose()
+    {
+        OnStateChanged -= RefreshAll;
     }
     
     public async Task ToggleAction()
     {
+        if (InteractionPaused)
+            return;
+        InteractionPaused = true;
+        
         if (AudioEnvironment == null)
             AudioEnvironment = await AudioContext.CreateAsync(Runtime);
 
@@ -62,8 +79,8 @@ public class MusicService
                 await AudioEnvironment.SuspendAsync();
             else
                 await AudioEnvironment.ResumeAsync();
-                
-            OnStateChanged?.Invoke();
+
+            InteractionPaused = false;
         }
     }
     
@@ -74,18 +91,26 @@ public class MusicService
             
         await AudioEnvironment.CloseAsync();
         AudioEnvironment = await AudioContext.CreateAsync(Runtime);
+        
+        while (Streamer.IsStreaming)
+            await Task.Delay(100);
             
         _ = Downloader.DownloadSong(ActiveSong, ActiveTask.Token);
-        _ = Loader.ProcessChunks(AudioEnvironment, ActiveTask.Token);
-        _ = Streamer.StartStreaming(AudioEnvironment, ActiveTask.Token);
+        _ = Streamer.ProcessChunks(AudioEnvironment, ActiveTask.Token);
         
-        OnStateChanged?.Invoke();
+        while (Streamer.LoadedBytes < 0)
+            await Task.Delay(100);
+            
+        InteractionPaused = false;
     }
     
     public async Task NextSong()
     {
+        if (InteractionPaused)
+            return;
         if (Upcoming.Count == 0)
             return;
+        InteractionPaused = true;
             
         if (ActiveSong != null)
             History.Insert(0, (ActiveSong.SongID, ActiveSong.SongName!));
@@ -98,8 +123,11 @@ public class MusicService
     
     public async Task LastSong()
     {
+        if (InteractionPaused)
+            return;
         if (History.Count == 0)
             return;
+        InteractionPaused = true;
             
         if (ActiveSong != null)
             Upcoming.Insert(0, (ActiveSong.SongID, ActiveSong.SongName!));

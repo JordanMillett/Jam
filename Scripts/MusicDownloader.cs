@@ -25,12 +25,12 @@ public class MusicDownloader
         DownloadedBytes = 0;
         FileSize = 0;
 
-        Console.WriteLine("Music Downloader Cancelled");
+        //Console.WriteLine("Music Downloader Cancelled");
     }
     
     public async Task DownloadSong(SongEntity ActiveSong, CancellationToken Token)
     {
-        Console.WriteLine("Music Downloader Started");
+        //Console.WriteLine("Music Downloader Started");
         
         IsDownloading = true;
         FileSize = await Http.GetFromJsonAsync<long>($"{Config.ApiUrl}/api/getsize/{ActiveSong.MP3FileName}");
@@ -52,7 +52,7 @@ public class MusicDownloader
 
             // Small delay between downloads
             OnStateChanged?.Invoke();
-            await Task.Delay(1000);
+            await Task.Delay(100);
         }
         
         IsDownloading = false;

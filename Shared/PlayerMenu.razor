@@ -25,15 +25,15 @@
 </Progress>
 
 <Progress Class="mb-3" Height="3">
-    <ProgressBar Width="@(((double) Music.Streamer.LoadedBytes / (double) Music.Downloader.FileSize) * 100)" style="background-color: grey; transition:none;"/>
+    <ProgressBar Width="@(((double) Music.Streamer.LoadedBytes / (double) Music.Downloader.FileSize) * 100)" style="background-color: var(--jam-text); transition:none;"/>
 </Progress>
 
 <div class="buttons mt-3">
     <div class="row">
-        <div class="col-3"><Button @onclick="OnBack"><Icon Name="IconName.SkipBackward"/></Button></div>
-        <div class="col-3"><Button @onclick="OnAction"><Icon Name="@(Music.Streamer.IsPaused ? IconName.Play : IconName.Pause)"/></Button></div>
-        <div class="col-3"><Button @onclick="OnForward"><Icon Name="IconName.SkipForward"/></Button></div>
-        <div class="col-3"><Button @onclick="OnSpecial"><Icon Name="IconName.PlusCircle"/></Button></div>
+        <div class="col-3"><Button @onclick="OnBack"><Icon Name="IconName.SkipBackwardFill"/></Button></div>
+        <div class="col-3"><Button @onclick="OnAction"><Icon Name="@(Music.Streamer.IsPaused ? IconName.PlayFill : IconName.PauseFill)"/></Button></div>
+        <div class="col-3"><Button @onclick="OnForward"><Icon Name="IconName.SkipForwardFill"/></Button></div>
+        <div class="col-3"><Button @onclick="OnSpecial"><Icon Name="IconName.PlusCircleFill"/></Button></div>
     </div>
 </div>
 

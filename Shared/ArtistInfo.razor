@@ -7,8 +7,10 @@
             <Image Class="cover pfp" Src="@Config.FullImageURL(Info.PictureFileName!)"/>
         </a></div>
     </div>
-    <div class="col-12 col-sm-7 col-md-8 col-lg-9">
+    <div class="col-12 col-sm-7 col-md-8 col-lg-9 text-center text-sm-start">
         <a href="browse/artist/@Info.ArtistID"><h1>@Info.ArtistName</h1></a>
+        <h4>@Info.Tagline</h4>
+        <p class="d-none d-md-block">@Info.Description</p>
     </div>
 </div>
 

@@ -5,9 +5,7 @@
     --jam-text: #a7a9be;
     --jam-border: #000000;
     
-    --jam-primary: #f92a1f;
-    --jam-secondary: #f5648b;
-    --jam-tertiary: #59ff4d;
+    --jam-primary: #f5648b;
 }
 
 html, body
@@ -26,7 +24,7 @@ html, body
 .btn, .btn:hover, .btn:active, .btn:focus, .btn:disabled
 {
     font-family: "Dangrek", "Comic Sans MS";
-    color: var(--jam-header);
+    color: var(--jam-background);
     font-size: 1.25rem;
     background-color: var(--jam-primary);
     
@@ -46,7 +44,8 @@ a
 
 p
 {
-    font-size: 1.00rem;
+    font-size: 1.25rem;
+    font-weight: 500;
     color: var(--jam-text);
 }
 
@@ -56,7 +55,7 @@ h1, h2, h3, h4, h5, h6
     color: var(--jam-header);
 }
 
-h1 { font-size: 3.50rem; }
+h1 { font-size: 3.50rem; color: var(--jam-primary); margin-bottom: 0;}
 h2 { font-size: 3.00rem; }
 h3 { font-size: 2.50rem; }
 h4 { font-size: 2.00rem; }
@@ -67,9 +66,14 @@ hr
 {
     opacity: 1;
     border: 0;
-    border-top: var(--jam-secondary) solid;
+    border-top: var(--jam-primary) solid;
     border-radius: 1rem;
     border-width: 0.3rem;
+}
+
+li::marker 
+{
+    color: var(--jam-primary);
 }
 
 .cover-container 

@@ -9,31 +9,8 @@
 
 @if(Album != null)
 {
-    <a href="browse/album/@Album.AlbumID">
-        <Image Class="cover" Src="@Config.FullImageURL(Album.PictureFileName!)"/>
-    </a>
-    
-    <a href="browse/artist/@Album.ArtistID"><h1>@Album.ArtistName</h1></a>
-    
-    <a href="browse/album/@Album.AlbumID"><h4>@Album.AlbumName</h4></a>
-    
-    <ol>
-    @for(int i = 0; i < Album.SongNames.Count; i++)
-    {
-        int index = i;
-        
-        <h5 style="cursor:pointer;"><li @onclick="() => Music.PlayInstantly((Album.SongIDs[index], Album.SongNames[index]))">@Album.SongNames[index]</li></h5>
-    }
-    </ol>
+    <AlbumInfo Info="@Album" />
 }
-
-<style>
-    .cover
-    {
-        max-width: 250px;
-        max-height: 250px;
-    }
-</style>
 
 @code 
 {

@@ -1,0 +1,37 @@
+@using Jelly
+@inject ConfigService Config
+@inject MusicService Music
+
+<div class="row">
+    <div class="col-12 col-sm-5 col-md-4 col-lg-3">
+        <div class="cover-container m-2"><a href="browse/album/@Info.AlbumID">
+            <Image Class="cover" Src="@Config.FullImageURL(Info.PictureFileName!)"/>
+        </a></div>
+    </div>
+    <div class="col-12 col-sm-7 col-md-8 col-lg-9 text-center text-sm-start">
+        <a href="browse/album/@Info.AlbumID"><h1>@Info.AlbumName</h1></a>
+        <a href="browse/artist/@Info.ArtistID"><h4>By @Info.ArtistName</h4></a>
+    </div>
+</div>
+
+<div class="row">
+    
+    <div class="col-12 m-4">
+    
+        <ol>
+            @for(int i = 0; i < Info.SongNames.Count; i++)
+            {
+                int index = i;
+                
+                <h4 style="cursor:pointer;"><li @onclick="() => Music.PlayInstantly((Info.SongIDs[index], Info.SongNames[index]))">@Info.SongNames[index]</li></h4>
+            }
+        </ol>
+    
+    </div>
+</div>
+
+@code
+{
+    [Parameter]
+    public AlbumEntity Info { get; set; } = null!;
+}

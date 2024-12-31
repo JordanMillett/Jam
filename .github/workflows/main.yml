@@ -13,10 +13,10 @@ jobs:
     
     - name: Download Datatypes from Jam repository
       run: |
-        mkdir -p ../Jam
-        curl -L https://raw.githubusercontent.com/JordanMillett/Jam/main/Entities.cs -o ../Jelly/Entities.cs
-        curl -L https://raw.githubusercontent.com/JordanMillett/Jam/main/Requests.cs -o ../Jelly/Requests.cs
-        curl -L https://raw.githubusercontent.com/JordanMillett/Jam/main/Responses.cs -o ../Jelly/Responses.cs
+        mkdir -p ../Jelly
+        curl -L https://raw.githubusercontent.com/JordanMillett/Jelly/main/Entities.cs -o ../Jelly/Entities.cs
+        curl -L https://raw.githubusercontent.com/JordanMillett/Jelly/main/Requests.cs -o ../Jelly/Requests.cs
+        curl -L https://raw.githubusercontent.com/JordanMillett/Jelly/main/Responses.cs -o ../Jelly/Responses.cs
     
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1

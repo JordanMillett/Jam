@@ -1,0 +1,110 @@
+:root
+{
+    --jam-background: #0f0e17;
+    --jam-header: #fffffe;
+    --jam-text: #a7a9be;
+    --jam-border: #000000;
+    
+    --jam-primary: #f5648b;
+}
+
+html, body
+{
+    font-family: "Inter", "Comic Sans MS";
+    background-color: var(--jam-background);
+}
+
+.autoscroll
+{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn, .btn:hover, .btn:active, .btn:focus, .btn:disabled
+{
+    font-family: "Dangrek", "Comic Sans MS";
+    color: var(--jam-background);
+    font-size: 1.25rem;
+    background-color: var(--jam-primary);
+    
+    border-style: solid;
+    border-radius: 0.50rem;
+    border-width: 0.15rem;
+    border-color: var(--jam-border);
+    
+    transition: none;
+}
+
+a
+{
+    color: var(--jam-primary);
+    text-decoration: none;
+}
+
+p
+{
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--jam-text);
+}
+
+h1, h2, h3, h4, h5, h6 
+{
+    font-family: "Dangrek", "Comic Sans MS";
+    color: var(--jam-header);
+}
+
+h1 { font-size: 3.50rem; color: var(--jam-primary); margin-bottom: 0;}
+h2 { font-size: 3.00rem; }
+h3 { font-size: 2.50rem; }
+h4 { font-size: 2.00rem; }
+h5 { font-size: 1.50rem; }
+h6 { font-size: 1.00rem; }
+
+hr
+{
+    opacity: 1;
+    border: 0;
+    border-top: var(--jam-primary) solid;
+    border-radius: 1rem;
+    border-width: 0.3rem;
+}
+
+li::marker 
+{
+    color: var(--jam-primary);
+}
+
+.cover-container 
+{
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    overflow: hidden;
+    border-radius: 25px;
+    background-color: var(--jam-background);
+}
+
+.pfp
+{
+    border-radius: 1000px;
+}
+
+.cover-container .cover
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+
+    background-image: url("empty.jpg");
+    /*background-image: url("500.jpg");*/
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: var(--jam-background);
+}

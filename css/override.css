@@ -1,0 +1,19 @@
+.modal-header
+{
+    background-color: var(--jam-primary);
+    border: 0;
+    border-bottom: var(--jam-primary) solid;
+    border-width: 0.3rem;
+}
+
+.modal-title
+{
+    color: var(--jam-background);
+}
+
+.modal-body, .modal-footer
+{
+    border: 0;
+    border-radius: 0;
+    background-color: var(--jam-background);
+}

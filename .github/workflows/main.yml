@@ -1,0 +1,43 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+permissions:
+  contents: write
+jobs:
+  deploy-to-github-pages:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Download Datatypes from Jam repository
+      run: |
+        mkdir -p ../Jam
+        curl -L https://raw.githubusercontent.com/JordanMillett/Jam/main/Entities.cs -o ../Jelly/Entities.cs
+        curl -L https://raw.githubusercontent.com/JordanMillett/Jam/main/Requests.cs -o ../Jelly/Requests.cs
+        curl -L https://raw.githubusercontent.com/JordanMillett/Jam/main/Responses.cs -o ../Jelly/Responses.cs
+    
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 8.0.204
+
+    - name: Publish .NET Core Project
+      run: dotnet publish Jam.csproj -c Release -o release --nologo
+      
+    - name: Change base-tag in index.html from / to Jam
+      run: sed -i 's/<base href="\/" \/>/<base href="\/Jam\/" \/>/g' release/wwwroot/index.html
+
+    - name: copy index.html to 404.html
+      run: cp release/wwwroot/index.html release/wwwroot/404.html
+
+    - name: Add .nojekyll file
+      run: touch release/wwwroot/.nojekyll
+
+    - name: Commit wwwroot to Github Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        BRANCH: gh-pages
+        FOLDER: release/wwwroot
+    

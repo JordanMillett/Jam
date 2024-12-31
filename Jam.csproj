@@ -10,11 +10,12 @@
   
     <Compile Include="..\Jelly\Entities.cs" Link="Entities.cs" />
     <Compile Include="..\Jelly\Requests.cs" Link="Requests.cs" />
-  <Compile Include="..\Jelly\Responses.cs" Link="Responses.cs" />
+    <Compile Include="..\Jelly\Responses.cs" Link="Responses.cs" />
 
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
     <PackageReference Include="KristofferStrube.Blazor.WebAudio" Version="0.1.0-alpha.12" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.11" PrivateAssets="all" />

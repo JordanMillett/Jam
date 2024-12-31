@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using System.Text.Json;
+using Blazored.LocalStorage;
 using Jam;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -12,7 +12,10 @@ builder.Services.AddSingleton(Http);
 builder.Services.AddSingleton<ConfigService>();
 builder.Services.AddSingleton<MusicService>();
 builder.Services.AddBlazorBootstrap();
+builder.Services.AddBlazoredLocalStorageAsSingleton();
 
 var host = builder.Build();
+
+await host.Services.GetRequiredService<ConfigService>().OnInitializeAsync();
 
 await host.RunAsync();

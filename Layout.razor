@@ -1,25 +1,58 @@
 @inherits LayoutComponentBase
 @using Jam.Shared
+@inject ConfigService Config
 
 <main>
-    <Navbar />
+    <div class="fullscreen">
+        <div class="row popup">
+            <div class="col-4 offset-4" style="background-color: var(--jam-background);">
+                <div class="row">
+                    <div class="col-12" style="background-color: var(--jam-primary)"><h2 style="color: var(--jam-background)">Login</h2></div>
+                    <div class="col-12 text-center">
+                        <br>
+                        <p>HELLO</p>
+                    </div>
+                    
+                    <div class="col-12 text-end">
+                        <Button @onclick="() => Config.TryLogin()">Login</Button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
     
+    <Navbar />
+
     <article class="content">
         @Body
     </article>
 </main>
 
 <style>
+    .popup
+    {
+        padding-top: 10rem;
+    }
+    
+    .fullscreen
+    {
+    background-color: rgba(0, 0, 0, 0.75);
+    position: fixed;
+    width:100%;
+    height: 100%;
+    }
+    
     main::-webkit-scrollbar 
     {
-        display: none;
+    display: none;
     } 
-    
+
     .content
     {
-        background-color: var(--jam-background);
-        border-radius: 25px;
-        padding: 1.5rem !important;
-        min-height: calc(100% + 3.5rem);
+    background-color: var(--jam-background);
+    border-radius: 25px;
+    padding: 1.5rem !important;
+    min-height: calc(100% + 3.5rem);
     }
 </style>

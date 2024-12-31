@@ -11,7 +11,7 @@ public class MusicService
     event Action? OnStateChanged = null!;
 
     public SongEntity ActiveSong = null!;
-    
+
     ConfigService Config = null!;
     HttpClient Http = null!;
     IJSRuntime Runtime = null!;
@@ -29,15 +29,16 @@ public class MusicService
 
     public Sequence Sequence = null!;
 
-    public MusicService(ConfigService config, HttpClient http, IJSRuntime runtime)
+    public MusicService(HttpClient http, IJSRuntime runtime)
     {
-        Config = config;
         Http = http;
         Runtime = runtime;
     }
     
-    public async Task InitializeAsync()
+    public async Task InitializeAsync(ConfigService config)
     {
+        Config = config;
+        
         OnStateChanged += RefreshAll;
         
         Downloader = new MusicDownloader(OnStateChanged!, Config, Http);

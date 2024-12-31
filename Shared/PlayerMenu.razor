@@ -5,7 +5,7 @@
 @if(Song != null)
 {
     <div class="cover-container mt-4 mb-2"><a href="browse/album/@Song.AlbumID">
-        <Image Class="cover" Src="@Config.FullImageURL(Song.PictureFileName!)"/>
+        <AsyncImage Class="cover" File="@Song.PictureFileName" />
     </a></div>
 
     <h4 class="text-center"><a href="browse/album/@Song.AlbumID">@Song.SongName</a></h4>

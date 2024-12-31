@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-12 col-sm-5 col-md-4 col-lg-3">
         <div class="cover-container m-2"><a href="browse/artist/@Info.ArtistID">
-            <Image Class="cover pfp" Src="@Config.FullImageURL(Info.PictureFileName!)"/>
+            <AsyncImage Class="cover pfp" File="@Info.PictureFileName" />
         </a></div>
     </div>
     <div class="col-12 col-sm-7 col-md-8 col-lg-9 text-center text-sm-start">
@@ -22,7 +22,7 @@
             int index = i;
 
             <div class="cover-container m-2"><a href="browse/album/@Info.AlbumIDs[index]">
-                <Image Class="cover" Src="@Config.FullImageURL(Info.AlbumPictureFileNames[index])"/>
+                <AsyncImage Class="cover" File="@Info.AlbumPictureFileNames[index]" />
             </a></div>
             
             <a href="browse/album/@Info.AlbumIDs[index]"><h4>@Info.AlbumNames[index]</h4></a>

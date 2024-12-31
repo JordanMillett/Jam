@@ -40,6 +40,8 @@ public class MusicService
         Config = config;
         
         OnStateChanged += RefreshAll;
+
+        RefreshAll();
         
         Downloader = new MusicDownloader(OnStateChanged!, Config, Http);
         Streamer = new MusicStreamer(OnStateChanged!, Downloader);

@@ -1,6 +1,7 @@
 using Jelly;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
+using System.Net.Http.Headers;
 
 public class ConfigService
 {
@@ -18,16 +19,9 @@ public class ConfigService
         Music = music;
     }
     
-    public string FullImageURL(string FileName)
-    {
-        return ApiUrl + "/api/get/image/" + FileName;
-    }
-    
     public async Task TryLogin()
     {
         HttpResponseMessage Response = await Http.PostAsJsonAsync($"{ApiUrl}/api/auth/login/", Login);
-
-        Console.WriteLine(AuthToken);
         
         if(Response.IsSuccessStatusCode)
         {
@@ -35,10 +29,9 @@ public class ConfigService
             
             AuthToken = Data.AuthToken!;
             Authenticated = true;
-
+            
+            Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthToken);
             await Music.InitializeAsync(this);
         }
-        
-        Console.WriteLine(AuthToken);
     }
 }

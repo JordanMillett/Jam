@@ -5,6 +5,9 @@
 
 <PageTitle>Jam. - Play</PageTitle>
 
+@if (Music == null || Music.ActiveSong == null)
+    return;
+
 <div class="container">
 
     <div class="row">
@@ -20,7 +23,7 @@
         </div>
 
         <div class="col-12 col-md-4">
-
+            
             <PlayerMenu
             Song=@Music.ActiveSong 
             OnBack="() => Music.LastSong()"

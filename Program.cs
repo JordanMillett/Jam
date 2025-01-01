@@ -19,3 +19,5 @@ var host = builder.Build();
 await host.Services.GetRequiredService<ConfigService>().OnInitializeAsync();
 
 await host.RunAsync();
+
+//dotnet watch run --no-hot-reload

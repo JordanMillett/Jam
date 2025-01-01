@@ -12,7 +12,8 @@ public class ConfigService
     private readonly IJSRuntime Runtime = null!;
     private readonly ILocalStorageService Local = null!;
 
-    public string ApiUrl = "jelly.jordanmillett.net"; //http://localhost:5169
+    public string ApiUrl = "https://jelly.jordanmillett.net";
+    //public string ApiUrl = "http://localhost:5169";
     public LoginRequest Login = new();
     public string AuthToken = "";
     public bool Authenticated = false;
@@ -27,6 +28,7 @@ public class ConfigService
 
     public async Task OnInitializeAsync()
     {
+        Console.WriteLine("CALLED");
         await TryLoadLoginDetails();
         
         await Runtime.InvokeVoidAsync("loadServiceWorker");

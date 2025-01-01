@@ -17,6 +17,7 @@ const CACHEABLE_ENDPOINTS =
 self.addEventListener('fetch', event => {
     
     const url = new URL(event.request.url);
+    
     const isCacheable = CACHEABLE_ENDPOINTS.some(endpoint => url.pathname.includes(endpoint));
     
     if (isCacheable)
@@ -26,7 +27,9 @@ self.addEventListener('fetch', event => {
             {
                 const cache = await caches.open('dynamic-cache');
 
-                const requestKey = new Request(event.request.url, {
+                const requestUrl = url.pathname + url.search;
+                
+                const requestKey = new Request(requestUrl, {
                     method: event.request.method,
                     headers: new Headers([...event.request.headers].filter(([key]) => key !== 'authorization')),
                 });

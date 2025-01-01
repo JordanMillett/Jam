@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "Jam",
   "resources": {
-    "hash": "sha256-JkgxfOZXCjDuBGKj6ass1dA9JmrJVaVH8EUSxsMEiuY=",
+    "hash": "sha256-29Y0t+jz82tboZopqL8/ZjuCl7MJo0XwtJi4QRV3oBQ=",
     "jsModuleNative": {
       "dotnet.native.8.0.4.6vlmefabfv.js": "sha256-ju0+XWE0ihz554eKEj0HQ8Opa61xpbUIaX5/MNo8we4="
     },
@@ -19,7 +19,7 @@
     "assembly": {
       "BlazorBootstrap.wasm": "sha256-KvMCw6Z4ECWlPEz4jeQ0QWRGeVqaYlz5Xty6Qz3MwDc=",
       "Blazored.LocalStorage.wasm": "sha256-OaMAAd5n7ORfyur5e3QIyEVKJ76MKIvwbg7/icnnYcU=",
-      "Jam.wasm": "sha256-KAhRuBQmb8qe6bZ0KakLVYuNNWxrzEfw6Am4URAmb2Q=",
+      "Jam.wasm": "sha256-uybZie7RZF3NSV4GE842Ow0ziXdz7oqlLQ5JJrGniXU=",
       "KristofferStrube.Blazor.DOM.wasm": "sha256-RdiHmZkJK6ChBUODYuurrA/AJOxcHi0tPLsEHWdfkfA=",
       "KristofferStrube.Blazor.MediaCaptureStreams.wasm": "sha256-JMWE96HAfcpe5UVbWy+752g8PIHzAy9KCBFlfy0W5qo=",
       "KristofferStrube.Blazor.WebAudio.wasm": "sha256-IG2kYWe7lSdfsOouMaUg0cUykVj74inAkGxbEpwttNg=",

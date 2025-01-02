@@ -101,7 +101,7 @@ li::marker
     object-fit: cover;
     display: block;
 
-    background-image: url("empty.jpg");
+    /*background-image: url("empty.jpg");*/
     /*background-image: url("500.jpg");*/
     background-size: cover; 
     background-position: center;
